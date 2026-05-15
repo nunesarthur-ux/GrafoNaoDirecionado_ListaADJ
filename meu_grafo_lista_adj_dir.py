@@ -30,13 +30,41 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
             self.dfs_recursivo(x)
 
 
+    def vertices_vizinhos(self, V):
+        '''
+        Verifica quais vertices sao adjacentes de um determinado vertice
+        passado como parâmetro. Penso que pode ajudar no BFS
+        :return: Uma lista com os vertices adjacentes a V
+        '''
+        adja = set()
+        for a in self.arestas:
+            if V.rotulo == self.arestas[a].v1.rotulo:
+                 adja.add(self.arestas[a].v2.rotulo)
+            elif V.rotulo == self.arestas[a].v2.rotulo:
+                adja.add(self.arestas[a].v1.rotulo)
+        return adja
 
-    def bfs(self):
+    def bfs(self, V):
         '''
         Explora as arestas do grafo para descobrir
         cada vértice que pode ser alcançado a partir do vértice fonte.
         :return:
         '''
+        arv_bfs = GrafoListaAdjacenciaDirecionado()
+        arv_bfs.adiciona_vertice(V)
+        visit = [V]
+        fila = [V]
+        while fila:
+            u = fila.pop(0)
+            x = self.vertices_vizinhos(u)
+            for i in x:
+                if i not in visit:
+                    visit.append(i)
+                    fila.append(i)
+                    arv_bfs.adiciona_vertice(i)
+                    arv_bfs.adiciona_aresta('a1',u,i,0)
+        return arv_bfs
+
 
     
 
