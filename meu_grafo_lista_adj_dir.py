@@ -62,7 +62,7 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
                     visit.append(i)
                     fila.append(i)
                     arv_bfs.adiciona_vertice(i)
-                    arv_bfs.adiciona_aresta('a1',u,i,0)
+                    arv_bfs.adiciona_aresta(f'a{visit.index(i)}',u,i,0)
         return arv_bfs
 
 
@@ -81,6 +81,13 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
         Se o vértice se repetir na busca, tem ciclo. Verifica a ocorrência do vértice
         Uso da função verifica_repeticao
         '''
+        x = self.bfs(GrafoListaAdjacenciaDirecionado)
+        for v in self.vertices[x]:
+            if self.verifica_repeticao():
+                return True
+        return False
+
+
 
     def eh_arvore(self):
         '''
