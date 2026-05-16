@@ -92,9 +92,11 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
     def eh_arvore(self):
         '''
         Se houver ciclo, não é árvore.
-
         :return:
         '''
+        if self.ha_ciclo():
+            return False
+        return True
 
     def vertices_nao_adjacentes(self):
         '''
@@ -110,7 +112,11 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
         Verifica se existe algum laço no grafo.
         :return: Um valor booleano que indica se existe algum laço.
         '''
-        pass
+        for a in self.arestas:
+            if self.arestas[a].v1.rotulo == self.arestas[a].v2.rotulo:
+                return True
+        return False
+
 
     def grau_entrada(self, V=''):
         '''
@@ -119,7 +125,13 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
         :return: Um valor inteiro que indica o grau do vértice
         :raises: VerticeInvalidoError se o vértice não existe no grafo
         '''
-        pass
+        if not self.existe_rotulo_vertice(V):
+            raise VerticeInvalidoError
+        grau = 0
+        for a in self.arestas:
+            if self.arestas[a].v2.rotulo == V:
+                grau+=1
+        return grau
 
     def grau_saida(self, V=''):
         '''
@@ -130,6 +142,11 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
         '''
         if not self.existe_rotulo_vertice(V):
             raise VerticeInvalidoError
+        grau_saida = 0
+        for a in self.arestas:
+            if self.arestas[a].v1.rotulo == V:
+                grau_saida +=1
+        return grau_saida
 
 
     def ha_paralelas(self):
