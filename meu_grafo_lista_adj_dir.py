@@ -29,7 +29,6 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
             x = self.vertice_oposto(V,i)
             self.dfs_recursivo(x)
 
-
     def vertices_vizinhos(self, V):
         '''
         Verifica quais vertices sao adjacentes de um determinado vertice
@@ -65,15 +64,17 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
                     arv_bfs.adiciona_aresta(f'a{visit.index(i)}',u,i,0)
         return arv_bfs
 
-
-    
-
     def verifica_repeticao(self):
         for v in self.vertices:
             if self.vertices[v].count(v.rotulo) > 1:
                 return True
         return False
 
+    def colore_vertice(self):
+        '''
+        Ideia: Criar um atributo "cor" para o vértice
+        :return:
+        '''
 
 
     def ha_ciclo(self):
@@ -81,13 +82,11 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
         Se o vértice se repetir na busca, tem ciclo. Verifica a ocorrência do vértice
         Uso da função verifica_repeticao
         '''
-        x = self.bfs(GrafoListaAdjacenciaDirecionado)
-        for v in self.vertices[x]:
+        x = self.bfs(self.vertices[0])
+        for v in x.vertices:
             if self.verifica_repeticao():
                 return True
         return False
-
-
 
     def eh_arvore(self):
         '''
@@ -96,7 +95,18 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
         '''
         if self.ha_ciclo():
             return False
+        for v in self.vertices:
+            if self.vertices[v].count(v.rotulo) > 1:
+                return False
         return True
+
+    def eh_bipartido(self):
+        '''
+        Verifica se um grafo é bipartido. Eu posso colorir os vértices com duas cores
+        de modo que nenhum vértice de uma vai estar ligado com outro vértice da mesma cor?
+        :return: True caso seja bipartido e False caso não seja.
+        '''
+
 
     def vertices_nao_adjacentes(self):
         '''
@@ -154,7 +164,14 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
         Verifica se há arestas paralelas no grafo
         :return: Um valor booleano que indica se existem arestas paralelas no grafo.
         '''
-        pass
+        x = self.arestas
+        y = self.arestas
+        for i in x:
+            for j in y:
+                if (x[i].v1.rotulo == y[j].v2.rotulo) and (x[i].v2.rotulo == y[j].v2.rotulo):
+                    return True
+        return False
+
 
     def arestas_sobre_vertice(self, V):
         '''
