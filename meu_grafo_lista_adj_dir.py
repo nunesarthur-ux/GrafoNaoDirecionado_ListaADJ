@@ -19,15 +19,21 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
                 oposto = self.arestas[a].v1
         return oposto
 
-    def dfs_recursivo(self, V):
-        a = self.arestas_sobre_vertice(V)
-        arestas_visitadas = []
-        for i in a:
-            self.get_vertice(V)
-            self.get_aresta(a)
-            arestas_visitadas.append(i)
-            x = self.vertice_oposto(V,i)
-            self.dfs_recursivo(x)
+    def dfs(self, V):
+        arv_dfs = MeuGrafo()
+        self.dfs_recursivo(arv_dfs,V)
+        return arv_dfs
+
+
+    def dfs_recursivo(self, arv_dfs, V):
+        if not arv_dfs.existe_rotulo_vertice(V):
+            arv_dfs.adiciona_vertice(V) #visita um vertice
+            arestas = self.arestas_sobre_vertice(V)
+            for i in arestas:
+                v2 = self.vertice_oposto(V,i)
+                arv_dfs.adiciona_vertice(v2.rotulo)
+                arv_dfs.adiciona_aresta(i.rotulo,V , v2, i.peso)
+                self.dfs_recursivo(arv_dfs, v2)
 
     def vertices_vizinhos(self, V):
         '''
