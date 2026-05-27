@@ -4,6 +4,26 @@ from bibgrafo.grafo_errors import *
 
 class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
 
+    def verifica_repeticao(self):
+        for v in self.vertices:
+            if self.vertices[v].count(v.rotulo) > 1:
+                return True
+        return False
+
+
+    def ha_ciclo(self):
+        if self.verifica_repeticao():
+            return True
+        return False
+
+
+    def eh_arvore(self):
+        for a in self.arestas:
+            if self.grau(self.arestas[a].v1.rotulo) or self.grau(self.arestas[a].v2.rotulo) > 1:
+                return False
+        return True
+
+
     def vertices_nao_adjacentes(self):
         '''
         Provê um conjunto de vértices não adjacentes no grafo.
@@ -11,7 +31,8 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
         Onde X, Z e W são vértices no grafo que não tem uma aresta entre eles.
         :return: Um objeto do tipo set que contém os pares de vértices não adjacentes
         '''
-        pass # Apague essa instrução e inicie seu código aqui
+
+
 
     def ha_laco(self):
         '''

@@ -1,6 +1,8 @@
 from bibgrafo.grafo_lista_adj_dir import GrafoListaAdjacenciaDirecionado
 from bibgrafo.grafo_errors import *
 
+from atividades_grafos.gerar_grafos_teste import vertices
+
 
 class MeuGrafo(GrafoListaAdjacenciaDirecionado):
 
@@ -12,28 +14,28 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
     '''
     def vertice_oposto (self,V,a):
         oposto = ''
-        for a in self.arestas:
-            if V in self.arestas[a].v1:
-                oposto = self.arestas[a].v2
-            elif V in self.arestas[a].v2:
-                oposto = self.arestas[a].v1
+        if V in a.v1:
+            oposto = a.v2
+        elif V in a.v2:
+            oposto = a.v1
         return oposto
 
     def dfs(self, V):
         arv_dfs = MeuGrafo()
         self.dfs_recursivo(arv_dfs,V)
+        vertices_visitados = set()
         return arv_dfs
 
 
-    def dfs_recursivo(self, arv_dfs, V):
-        if not arv_dfs.existe_rotulo_vertice(V):
-            arv_dfs.adiciona_vertice(V) #visita um vertice
+    def dfs_recursivo(self, arv_dfs,vertices_visitados,V):
+        if V not in vertices_visitados:
+            vertices_visitados.add(V)
             arestas = self.arestas_sobre_vertice(V)
             for i in arestas:
                 v2 = self.vertice_oposto(V,i)
                 arv_dfs.adiciona_vertice(v2.rotulo)
                 arv_dfs.adiciona_aresta(i.rotulo,V , v2, i.peso)
-                self.dfs_recursivo(arv_dfs, v2)
+                self.dfs_recursivo(arv_dfs,vertices_visitados, v2)
 
     def vertices_vizinhos(self, V):
         '''
@@ -81,7 +83,8 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
         Ideia: Criar um atributo "cor" para o vértice
         :return:
         '''
-
+        for v in self.vertices:
+            self.arestas[v].attr["cor"] = "NOT"
 
     def ha_ciclo(self):
         '''
@@ -112,6 +115,13 @@ class MeuGrafo(GrafoListaAdjacenciaDirecionado):
         de modo que nenhum vértice de uma vai estar ligado com outro vértice da mesma cor?
         :return: True caso seja bipartido e False caso não seja.
         '''
+        for v in self.vertices:
+            self.vertices[0].attr["cor"] = "PRETO"
+            vizinhos = self.vertices_vizinhos(self.vertices[v])
+            if vizinhos[v].attr["cor"] == "PRETO":
+                return False
+            else:
+                vizinhos[v].attr["cor"] = "BRANCO"
 
 
     def vertices_nao_adjacentes(self):
