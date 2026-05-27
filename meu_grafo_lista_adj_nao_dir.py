@@ -4,11 +4,6 @@ from bibgrafo.grafo_errors import *
 
 class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
 
-    def verifica_repeticao(self):
-        for v in self.vertices:
-            if self.vertices[v].count(v.rotulo) > 1:
-                return True
-        return False
 
 
     def ha_ciclo(self):
@@ -23,6 +18,50 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
                 return False
         return True
 
+    def eh_bipartido(self):
+        grupo1 = set()
+        grupo2 = set()
+        for i in self.vertices:
+            v_vizinhos = self.vertices_vizinhos(self.vertices[i])
+            for x in v_vizinhos:
+                if v_vizinhos[x].attr["COR"] != self.vertices[i].attr["COR"]:
+                    if self.vertices[i].attr["COR"] == "PRETO":
+                        v_vizinhos[x].attr["COR"] == "BRANCO"
+                    else:
+                        v_vizinhos[x].attr["COR"] == "PRETO"
+                else:
+                    return False
+        return True
+
+
+
+
+    def vertices_vizinhos(self, V):
+        '''
+        Verifica quais vertices sao adjacentes de um determinado vertice
+        passado como parâmetro. Penso que pode ajudar no BFS
+        :return: Uma lista com os vertices adjacentes a V
+        '''
+        adja = set()
+        for a in self.arestas:
+            if V.rotulo == self.arestas[a].v1.rotulo:
+                 adja.add(self.arestas[a].v2.rotulo)
+            elif V.rotulo == self.arestas[a].v2.rotulo:
+                adja.add(self.arestas[a].v1.rotulo)
+        return adja
+
+    def verifica_repeticao(self):
+        for v in self.vertices:
+            if self.vertices[v].count(v.rotulo) > 1:
+                return True
+        return False
+
+    def vertices_adjacentes(self):
+        vertices_adj = set()
+        for a in self.arestas.values():
+            vertices_adj.add(f"{a.v1.rotulo}-{a.v2.rotulo}")
+            vertices_adj.add(f"{a.v2.rotulo}-{a.v1.rotulo}")
+        return vertices_adj
 
     def vertices_nao_adjacentes(self):
         '''
@@ -31,7 +70,16 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
         Onde X, Z e W são vértices no grafo que não tem uma aresta entre eles.
         :return: Um objeto do tipo set que contém os pares de vértices não adjacentes
         '''
-
+        vertices_adjacentes = self.vertices_adjacentes()
+        combinacoes = set()
+        for v1 in range(len(self.vertices)):
+            for v2 in range(v1 + 1, len(self.vertices)):
+                combinacoes.add(f"{self.vertices[v1].rotulo}-{self.vertices[v2].rotulo}")
+        vna = set()
+        for i in combinacoes:
+            if i not in vertices_adjacentes:
+                vna.add(i)
+        return vna
 
 
     def ha_laco(self):
